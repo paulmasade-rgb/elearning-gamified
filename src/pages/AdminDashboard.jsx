@@ -8,7 +8,8 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
-const AdminDashboard = ({ onLogout, toggleTheme, currentTheme, role, onOpenChat }) => {
+// ✅ Added onNavigate to props
+const AdminDashboard = ({ onLogout, toggleTheme, currentTheme, role, onOpenChat, onNavigate }) => {
   const isSuperAdmin = role === 'admin';
   const dashboardTitle = isSuperAdmin ? "System Administrator" : "Academic Instructor";
 
@@ -627,6 +628,10 @@ const AdminDashboard = ({ onLogout, toggleTheme, currentTheme, role, onOpenChat 
         </nav>
 
         <div className="bottom-actions">
+          {/* ✅ Added the Switch View Button here */}
+          <button onClick={() => onNavigate('dashboard')} style={{ ...styles.actionBtn, background: 'var(--accent-color)', color: 'white', border: 'none' }}>
+            <FaBook /> View Student Experience
+          </button>
           <button onClick={toggleTheme} className="glass-card" style={styles.actionBtn}>
             {currentTheme === 'light' ? <FaMoon /> : <FaSun color="#f1c40f" />} Theme
           </button>

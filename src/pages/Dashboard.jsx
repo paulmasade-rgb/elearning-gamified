@@ -12,7 +12,8 @@ import {
 import axios from 'axios';
 import confetti from 'canvas-confetti'; 
 
-const Dashboard = ({ username, avatar, onNavigate, refreshTrigger, onLogout, toggleTheme, currentTheme, onStartLesson, onOpenChat }) => {
+// ✅ Added userRole to props
+const Dashboard = ({ username, avatar, onNavigate, refreshTrigger, onLogout, toggleTheme, currentTheme, onStartLesson, onOpenChat, userRole }) => {
   const [xp, setXP] = useState(0); 
   const [level, setLevel] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -186,21 +187,30 @@ const Dashboard = ({ username, avatar, onNavigate, refreshTrigger, onLogout, tog
           </div>
 
           <div>
-            <h1 
-              onClick={handleSecretLogoClick}
-              style={{ 
-                margin: 0, fontSize: '20px', color: 'var(--text-primary)', fontWeight: '900',
-                cursor: 'pointer', userSelect: 'none', transition: 'transform 0.1s', display: 'inline-block',
-                transform: logoClicks > 0 ? `scale(${1 + (logoClicks * 0.05)})` : 'scale(1)',
-                transformOrigin: 'left center'
-              }}
-              className={konamiUnlocked ? 'retro-text' : ''}
-            >
-              {username}
-            </h1>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h1 
+                onClick={handleSecretLogoClick}
+                style={{ 
+                  margin: 0, fontSize: '20px', color: 'var(--text-primary)', fontWeight: '900',
+                  cursor: 'pointer', userSelect: 'none', transition: 'transform 0.1s', display: 'inline-block',
+                  transform: logoClicks > 0 ? `scale(${1 + (logoClicks * 0.05)})` : 'scale(1)',
+                  transformOrigin: 'left center'
+                }}
+                className={konamiUnlocked ? 'retro-text' : ''}
+              >
+                {username}
+              </h1>
+
+              {/* ✅ Added the Return to Admin Button here */}
+              {userRole === 'admin' && (
+                <button onClick={() => onNavigate('admin')} style={{ background: '#d63031', color: 'white', padding: '6px 12px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', border: 'none', marginLeft: '15px', fontSize: '11px', textTransform: 'uppercase' }}>
+                  Return to Admin Panel
+                </button>
+              )}
+            </div>
             
             {/* ✅ MIDNIGHT GUARDIAN LOGIC APPLIED HERE */}
-            <p style={{ margin: 0, fontSize: '12px', color: isMidnight ? '#a29bfe' : 'var(--accent-color)', fontWeight: '800', transition: 'color 0.5s' }}>
+            <p style={{ margin: 0, fontSize: '12px', color: isMidnight ? '#a29bfe' : 'var(--accent-color)', fontWeight: '800', transition: 'color 0.5s', marginTop: '4px' }}>
               {konamiUnlocked ? "Legacy Player" : isMidnight ? "Midnight Guardian 🦉" : "Independent Scholar"}
             </p>
           </div>

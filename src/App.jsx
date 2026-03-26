@@ -95,16 +95,16 @@ function App() {
     const updateActivity = () => localStorage.setItem('lastActionTime', Date.now());
     window.addEventListener('mousemove', updateActivity);
     window.addEventListener('keydown', updateActivity);
-    window.addEventListener('touchstart', updateActivity); // ✅ Added for mobile
-    window.addEventListener('scroll', updateActivity); // ✅ Added for mobile
-    window.addEventListener('click', updateActivity); // ✅ Added for mobile
+    window.addEventListener('touchstart', updateActivity); 
+    window.addEventListener('scroll', updateActivity); 
+    window.addEventListener('click', updateActivity); 
     const interval = setInterval(checkInactivity, 60000); 
     return () => {
       window.removeEventListener('mousemove', updateActivity);
       window.removeEventListener('keydown', updateActivity);
-      window.removeEventListener('touchstart', updateActivity); // ✅ Removed on cleanup
-      window.removeEventListener('scroll', updateActivity); // ✅ Removed on cleanup
-      window.removeEventListener('click', updateActivity); // ✅ Removed on cleanup
+      window.removeEventListener('touchstart', updateActivity); 
+      window.removeEventListener('scroll', updateActivity); 
+      window.removeEventListener('click', updateActivity); 
       clearInterval(interval);
     };
   }, [user]);
@@ -133,7 +133,12 @@ function App() {
       navigate('/banned'); 
     } else { 
       showToast(`Welcome back, ${safeUsername}!`, "success"); 
-      navigate('/dashboard'); 
+      // ✅ ROUTE BASED ON ROLE
+      if (normalizedRole === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard'); 
+      }
     }
   };
 
@@ -201,19 +206,32 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword onNavigate={(v) => navigate(`/${v}`)} />} />
         <Route path="/reset-password/:resetToken" element={<ResetPassword onNavigate={(v) => navigate(`/${v}`)} />} />
 
-        <Route path="/dashboard" element={
+        {/* ✅ ADMIN ONLY ROUTE */}
+        <Route path="/admin" element={
           <ProtectedRoute user={user} isBanned={isBanned}>
             {role === 'admin' ? (
-              <AdminDashboard onLogout={handleLogout} onOpenChat={(f) => setActiveChatFriend(f)} />
-            ) : (
-              <Dashboard 
-                username={user} avatar={avatar} refreshTrigger={refreshTrigger}
-                onLogout={handleLogout} onNavigate={(v) => navigate(`/${v}`)} 
-                toggleTheme={toggleTheme} currentTheme={theme} 
-                onStartLesson={(l) => { setActiveLesson(l); navigate('/lesson'); }} 
+              <AdminDashboard 
+                onLogout={handleLogout} 
                 onOpenChat={(f) => setActiveChatFriend(f)} 
+                onNavigate={(v) => navigate(`/${v}`)} // Allows admin to navigate to /dashboard
               />
+            ) : (
+              <Navigate to="/dashboard" replace /> 
             )}
+          </ProtectedRoute>
+        } />
+
+        {/* ✅ STUDENT DASHBOARD (Admins can also view this) */}
+        <Route path="/dashboard" element={
+          <ProtectedRoute user={user} isBanned={isBanned}>
+            <Dashboard 
+              username={user} avatar={avatar} refreshTrigger={refreshTrigger}
+              onLogout={handleLogout} onNavigate={(v) => navigate(`/${v}`)} 
+              toggleTheme={toggleTheme} currentTheme={theme} 
+              onStartLesson={(l) => { setActiveLesson(l); navigate('/lesson'); }} 
+              onOpenChat={(f) => setActiveChatFriend(f)} 
+              userRole={role} // Passed so dashboard knows if an admin is visiting
+            />
           </ProtectedRoute>
         } />
 
@@ -232,10 +250,8 @@ function App() {
         <Route path="/course-catalog" element={<ProtectedRoute user={user} isBanned={isBanned}><CourseCatalog username={user} onNavigate={(v) => navigate(`/${v}`)} /></ProtectedRoute>} />
         <Route path="/stats" element={<ProtectedRoute user={user} isBanned={isBanned}><Stats username={user} onNavigate={(v) => navigate(`/${v}`)} refreshTrigger={refreshTrigger} /></ProtectedRoute>} />
         
-        {/* ✅ Passed username to LessonView for secret API call */}
         <Route path="/lesson" element={<ProtectedRoute user={user} isBanned={isBanned}><LessonView lesson={activeLesson} username={user} onComplete={handleLessonComplete} onExit={() => navigate('/dashboard')} /></ProtectedRoute>} />
         
-        {/* ✅ LORE BOOK ROUTE ADDED HERE */}
         <Route path="/codex" element={<ProtectedRoute user={user} isBanned={isBanned}><LoreBook username={user} onNavigate={(v) => navigate(`/${v}`)} /></ProtectedRoute>} />
 
         <Route path="/credits" element={<ProtectedRoute user={user} isBanned={isBanned}><Credits onNavigate={(v) => navigate(`/${v}`)} /></ProtectedRoute>} />
