@@ -6,7 +6,7 @@ import Flashcard from '../components/Flashcard';
 import AdaptiveQuiz from '../components/AdaptiveQuiz'; 
 import { 
   FaCloudUploadAlt, FaBrain, FaFileAlt, FaChevronLeft, 
-  FaDownload, FaTrash, FaCogs, FaCheckCircle, FaSpinner, FaSearch // ✅ Added FaSearch
+  FaDownload, FaTrash, FaCogs, FaCheckCircle, FaSpinner, FaSearch 
 } from 'react-icons/fa';
 
 // 🧠 AESTHETIC STEPPER COMPONENT
@@ -81,7 +81,6 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
   const [deletingId, setDeletingId] = useState(null); 
   const [materialToDelete, setMaterialToDelete] = useState(null);
 
-  // ✅ NEW: Search State
   const [searchQuery, setSearchQuery] = useState("");
 
   const [quizConfig, setQuizConfig] = useState({
@@ -93,7 +92,8 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
 
   const fetchMaterials = async () => {
     try {
-      const res = await api.get(`/study-vault/user/${userId}`);
+      // ✅ FIX 1: Added /api to the route
+      const res = await api.get(`/api/study-vault/user/${userId}`);
       setMaterials(res.data);
     } catch (err) {
       showToast("Could not load your vault", "error");
@@ -104,7 +104,6 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     if (userId) fetchMaterials(); 
   }, [userId]);
 
-  // ✅ NEW: Filtering Logic
   const filteredMaterials = materials.filter(m => 
     m.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -140,7 +139,8 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     formData.append('title', file.name);
 
     try {
-      await api.post('/study-vault/upload', formData, {
+      // ✅ FIX 2: Added /api to the route
+      await api.post('/api/study-vault/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (p) => {
           const progress = Math.round((p.loaded * 100) / p.total);
@@ -168,7 +168,8 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     const timeLimitSeconds = customConfig.timeLimitMinutes ? customConfig.timeLimitMinutes * 60 : 0;
 
     try {
-      const res = await api.post('/study-vault/generate-study-material', { 
+      // ✅ FIX 3: Added /api to the route
+      const res = await api.post('/api/study-vault/generate-study-material', { 
         materialId, 
         userId, 
         type,
@@ -197,7 +198,8 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     setMaterialToDelete(null); 
 
     try {
-      await api.delete(`/study-vault/${materialId}`);
+      // ✅ FIX 4: Added /api to the route
+      await api.delete(`/api/study-vault/${materialId}`);
       showToast("Material deleted successfully", "success");
       fetchMaterials();
       
