@@ -92,8 +92,7 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
 
   const fetchMaterials = async () => {
     try {
-      // ✅ REVERTED: Removed the /api prefix
-      const res = await api.get(`/study-vault/user/${userId}`);
+      const res = await api.get(`/api/study-vault/user/${userId}`);
       setMaterials(res.data);
     } catch (err) {
       showToast("Could not load your vault", "error");
@@ -139,8 +138,7 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     formData.append('title', file.name);
 
     try {
-      // ✅ REVERTED: Removed the /api prefix
-      await api.post('/study-vault/upload', formData, {
+      await api.post('/api/study-vault/upload', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
         onUploadProgress: (p) => {
           const progress = Math.round((p.loaded * 100) / p.total);
@@ -168,8 +166,7 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     const timeLimitSeconds = customConfig.timeLimitMinutes ? customConfig.timeLimitMinutes * 60 : 0;
 
     try {
-      // ✅ REVERTED: Removed the /api prefix
-      const res = await api.post('/study-vault/generate-study-material', { 
+      const res = await api.post('/api/study-vault/generate-study-material', { 
         materialId, 
         userId, 
         type,
@@ -198,8 +195,7 @@ const StudyDashboard = ({ userId, onNavigate, showToast }) => {
     setMaterialToDelete(null); 
 
     try {
-      // ✅ REVERTED: Removed the /api prefix
-      await api.delete(`/study-vault/${materialId}`);
+      await api.delete(`/api/study-vault/${materialId}`);
       showToast("Material deleted successfully", "success");
       fetchMaterials();
       
