@@ -170,7 +170,6 @@ const AdaptiveQuiz = ({ lessonId, onComplete, onWrongAnswer, onCorrectAnswer, on
     return currentQuestion.options.filter(o => o.isCorrect === true || String(o.isCorrect) === 'true').map(o => o.text).join(', ');
   };
 
-  // Format the time as MM:SS
   const formatTime = (seconds) => {
     if (seconds === null) return "00:00";
     const m = Math.floor(seconds / 60).toString().padStart(2, '0');
@@ -200,7 +199,6 @@ const AdaptiveQuiz = ({ lessonId, onComplete, onWrongAnswer, onCorrectAnswer, on
           <FaBrain color="#6c5ce7" /> Mastery Level {currentDifficulty}
         </span>
         
-        {/* ✅ THE NEW TIMER UI */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
           {timeLeft !== null && (
             <span className={timeLeft <= 30 ? 'timer-warning' : ''} style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', color: 'var(--text-primary)', padding: '6px 12px', borderRadius: '15px', fontWeight: 'bold', fontSize: '14px', transition: 'all 0.3s' }}>
@@ -256,13 +254,38 @@ const AdaptiveQuiz = ({ lessonId, onComplete, onWrongAnswer, onCorrectAnswer, on
         )}
 
         {currentQuestion.type === 'match' && currentQuestion.options?.map((opt, idx) => (
-          <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '15px', background: 'rgba(255,255,255,0.02)', padding: '15px', borderRadius: '18px', border: '2px solid var(--card-border)' }}>
-            <div style={{ flex: 1, color: 'var(--text-primary)', fontSize: '15px', fontWeight: 'bold' }}>{opt.matchLeft}</div>
+          <div key={idx} style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '15px', 
+            background: 'rgba(255,255,255,0.02)', 
+            padding: '15px', 
+            borderRadius: '18px', 
+            border: '2px solid var(--card-border)',
+            width: '100%',
+            boxSizing: 'border-box'
+          }}>
+            <div style={{ flex: 1, color: 'var(--text-primary)', fontSize: '15px', fontWeight: 'bold' }}>
+              {opt.matchLeft}
+            </div>
             <select 
               disabled={showExplanation} 
               value={answerState?.[opt.matchLeft] || ""} 
               onChange={e => setAnswerState({ ...answerState, [opt.matchLeft]: e.target.value })} 
-              style={{ flex: 1.2, padding: '12px', borderRadius: '12px', background: 'var(--bg-body)', color: 'var(--text-primary)', border: '1px solid #a29bfe', cursor: 'pointer', outline: 'none', fontWeight: '600' }}
+              style={{ 
+                flex: 1.2, 
+                padding: '12px', 
+                borderRadius: '12px', 
+                background: 'var(--bg-body)', 
+                color: 'var(--text-primary)', 
+                border: '1px solid #a29bfe', 
+                cursor: 'pointer', 
+                outline: 'none', 
+                fontWeight: '600',
+                minWidth: 0,
+                width: '100%',
+                textOverflow: 'ellipsis'
+              }}
             >
               <option value="">Select match...</option>
               {shuffledMatchOptions.map((o, i) => <option key={i} value={o}>{o}</option>)}
