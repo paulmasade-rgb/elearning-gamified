@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import XPBar from '../components/XPBar';
 import BadgeCard from '../components/BadgeCard';
 import CourseCard from '../components/CourseCard';
-import ActivityFeed from '../components/ActivityFeed'; 
+// import ActivityFeed from '../components/ActivityFeed'; // 🔴 DISABLED
 import SocialInbox from '../components/SocialInbox'; 
 import { 
   FaBookOpen, FaPlus, FaChartLine, FaBars, FaCommentDots, 
@@ -233,10 +233,12 @@ const Dashboard = ({ username, avatar, onNavigate, refreshTrigger, onLogout, tog
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', color: 'var(--text-primary)', marginTop: '12px' }}><span>Accuracy</span><b>🎯 {stats.accuracy}%</b></div>
           </div>
           
+          {/* 🔴 DISABLED: AI Study Vault Button
           <div className="action-card study-vault-card" onClick={() => onNavigate('study-vault')}>
             <FaBrain size={20} /> 
             <span>AI Study Vault</span>
           </div>
+          */}
 
           <h3 style={{ fontSize: '15px', color: 'var(--text-primary)', marginTop: '25px', marginBottom: '15px', fontWeight: '900' }}>Milestone Badges</h3>
           {userData?.badges?.map((b, i) => <BadgeCard key={i} name={b} isUnlocked={true} />)}
@@ -276,7 +278,10 @@ const Dashboard = ({ username, avatar, onNavigate, refreshTrigger, onLogout, tog
                </div>
              ))}
            </div>
+           
+           {/* 🔴 DISABLED: Activity Feed
            <ActivityFeed activities={activities} />
+           */}
         </div>
       </div>
 
@@ -288,9 +293,11 @@ const Dashboard = ({ username, avatar, onNavigate, refreshTrigger, onLogout, tog
         <div className="hidden-scroll" style={{ padding: '30px 0', display: 'flex', flexDirection: 'column', height: '100%', overflowY: 'auto', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}>
           <button onClick={() => { onNavigate('profile'); setIsMenuOpen(false); }} className="vici-menu-item"><FaUser opacity={0.6} /> Profile Settings</button>
           
+          {/* 🔴 DISABLED: Side Menu Vault Link
           <button onClick={() => { onNavigate('study-vault'); setIsMenuOpen(false); }} className="vici-menu-item" style={{ color: '#2ecc71' }}>
             <FaBrain opacity={0.8} /> Personal Study Vault
           </button>
+          */}
 
           <button onClick={() => { onNavigate('course-catalog'); setIsMenuOpen(false); }} className="vici-menu-item"><FaBookOpen opacity={0.6} /> Course Catalog</button>
           <button onClick={() => { onNavigate('forum'); setIsMenuOpen(false); }} className="vici-menu-item"><FaUsers opacity={0.6} /> Community</button>
